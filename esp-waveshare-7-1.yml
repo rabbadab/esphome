@@ -86,9 +86,6 @@ text_sensor:
     id: lunch_lustig
     entity_id: sensor.lunch_idag_brannkarr_skola
     internal: true
-  - platform: homeassistant
-    id: w_fivedays
-    entity_id: sensor.weather_fivedays
   
 font:
   - file: 'arial.ttf'
@@ -238,7 +235,6 @@ display:
     update_interval: never
     rotation: 270°
     lambda: |-
-        // Print outside temp
         #define xres 480 
         #define yres 800
         it.filled_rectangle(0, 0, xres, yres, COLOR_ON);
@@ -263,9 +259,6 @@ display:
         it.print(15, 325 - id(current_offset) - id(global_offset), id(roboto11), COLOR_OFF, TextAlign::TOP_LEFT , "Agnes");
         it.printf(60, 320 - id(current_offset) - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(lunch_brann).state.c_str());
 
-        // Print outside temp
-
-        //it.filled_rectangle(0, 0, xres, yres, COLOR_ON);
         // it.print(xres/2, yres/2, id(font_title), COLOR_OFF, TextAlign::CENTER, "Refreshing..."); 
         it.print(15, 350 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F050F");
         it.filled_rectangle(60, 365 - id(current_offset) - id(global_offset), 300, 3, COLOR_OFF);
@@ -275,8 +268,3 @@ display:
         it.printf(100, 420 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(inside_temp_uppe).state);
         it.print(60, 460 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0DD2");
         it.printf(100, 460 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(inside_temp_nere).state);
-
-        fivedays = id(w_fivedays).state;
-        
-        ESP_LOGD("%s", fivedays.c_str());
- 
