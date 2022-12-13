@@ -16,10 +16,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "1nQdQj8F/Hp1gmGqmsbaaWcJ9NMInnMDRE7fqJMSlK4="
+    key: !secret api_encryption
 
 ota:
-  password: "040de3d8230364b0dfc3d66fb14410d9"
+  password: !secret ota_password
 
 
 wifi:
@@ -29,7 +29,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Esp-Waveshare-7-1"
-    password: "RUAHnVICMXCo"
+    password: !secret ap_password
 captive_portal:
 
 time:
@@ -37,7 +37,7 @@ time:
     id: homeassistant_time
     timezone: Europe/Stockholm
     on_time:
-      # Every 1 minutes
+      # Every 5 minutes
       - seconds: 0
         minutes: /5
         then:
@@ -45,13 +45,12 @@ time:
 sensor:
   - platform: homeassistant
     id: electricity_price
-    entity_id: sensor.electricity_price_halleborgsgatan_13b
+    entity_id: !secret sensor_price
     internal: true
 
   - platform: homeassistant
     id: outside_temperature
     entity_id: sensor.nibe_73223_40004
-    #entity_id: sensor.alsike_ute_temperature
     internal: true
   - platform: homeassistant
     id: inside_temp_uppe
@@ -88,60 +87,6 @@ text_sensor:
     internal: true
   
 font:
-  - file: 'arial.ttf'
-    id: roboto14
-    size: 14
-    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
-  - file: 'arial.ttf'
-    id: roboto11
-    size: 11
-    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
-  - file: 'arial.ttf'
-    id: roboto30
-    size: 28
-    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
-  - file: 'fonts/GothamRnd-Book.ttf'
-    id: font_small_book
-    size: 18
-    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
-  - file: 'fonts/GothamRnd-Bold.ttf'
-    id: font_large_bold
-    size: 108
-    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
-  - file: 'fonts/GothamRnd-Bold.ttf'
-    id: font_title
-    size: 54
-    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
-        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
   - file: 'fonts/GothamRnd-Bold.ttf'
     id: font_medium_bold
     size: 30
@@ -164,47 +109,13 @@ font:
     id: mdi_30
     size: 30
     glyphs: [
-      # Sun
-      "\U000F059A", # mdi-weather-sunset
-      # Moon
-      "\U000F0F64", # mdi-moon-new
-      "\U000F0F67", # mdi-moon-waxing-crescent
-      "\U000F0F61", # mdi-moon-first-quarter
-      "\U000F0F68", # mdi-moon-waxing-gibbous
-      "\U000F0F62", # mdi-moon-full
-      "\U000F0F66", # mdi-moon-waning-gibbous
-      "\U000F0F63", # mdi-moon-last-quarter
-      "\U000F0F65", # mdi-moon-waning-crescent
       "\U000F11BE", # mdi-car-info
-      "\U000F0991", # mdi-office-building
       "\U000F140B", # mdi-lightning-bolt
       "\U000F025A", # mdi-food
       "\U000F050F", # mdi-thermometer
-      "\U000F0F54", # mdi-home-thermometer
       "\U000F0D80", # mdi-home-floor-1
       "\U000F0DD2", # mdi-home-floor-0
       "\U000F0405", # mdi-pine-tree
-      "\U000F0599", # "sunny"
-      "\U000F0594", # "clear-night" 
-      "\U000F0590", # "cloudy"
-      "\U000F0597", # "rainy"
-      "\U000F067F", # "sleet"
-      "\U000F0598", # "snowy"
-      "\U000F059D", # "wind"
-      "\U000F0591", # "fog"
-      "\U000F0595", # "partlycloudy"
-      # F0734 mdi-arrow-right-bold
-            
-      # F11BE mdi-car-info
-      # Rooms
-      "\U000F09A0", # mdi-shower
-      "\U000F09A1", # mdi-shower-head
-      "\U000F04B9", # mdi-sofa
-      "\U000F0C99", # mdi-microwave
-      "\U000F0FD1", # mdi-bed-king-outline
-      "\U000F106E", # mdi-bed-single-outline
-      "\U000F0322", # mdi-laptop
-      "\U000F07F4", # mdi-television-classic
       ]
 # Pins for Waveshare ePaper ESP Board
 spi:
@@ -235,36 +146,55 @@ display:
     update_interval: never
     rotation: 270°
     lambda: |-
+        // Create a black background sqare that fills the display
         #define xres 480 
         #define yres 800
         it.filled_rectangle(0, 0, xres, yres, COLOR_ON);
+
+        // Power icon
         it.print(15, 70 - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F140B");
+        // Horizontal line divider
         it.filled_rectangle(60, 80 - id(global_offset), 300, 3, COLOR_OFF);
+        // Electricity price
         it.printf(60, 100 - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT , "%.2f Kr", id(electricity_price).state);
+        // Price with words
         it.printf(60, 130 - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(tibber_cost_word).state.c_str()); 
 
+        // Car icon info
         it.print(15, 150 - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F11BE");
+        // Horizontal line divider
         it.filled_rectangle(60, 165 - id(global_offset), 300, 3, COLOR_OFF);
+        // Sensor how long from home to work
         it.printf(60, 180 - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.0fmin till SEB", id(alsike_to_work).state);
+        // function for checking if ETA is bigger than 1 then show ETA to home on display and also add 40 pixels to everything below this line. 
         if (id(par_eta_till_hem).state >= 1) {
         it.printf(60, 220 - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.0fmin hem", id(par_eta_till_hem).state);
         id(current_offset) = 0;
         } else {
           id(current_offset) = 40;
         }
+        Icon for food
         it.print(15, 250 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F025A");
+        // Horizontal line divider
         it.filled_rectangle(60, 265 - id(current_offset) - id(global_offset), 300, 3, COLOR_OFF);
         it.print(15, 295 - id(current_offset) - id(global_offset), id(roboto11), COLOR_OFF, TextAlign::TOP_LEFT , "Maja");
         it.printf(60, 290 - id(current_offset) - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(lunch_lustig).state.c_str());
         it.print(15, 325 - id(current_offset) - id(global_offset), id(roboto11), COLOR_OFF, TextAlign::TOP_LEFT , "Agnes");
         it.printf(60, 320 - id(current_offset) - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(lunch_brann).state.c_str());
 
-        // it.print(xres/2, yres/2, id(font_title), COLOR_OFF, TextAlign::CENTER, "Refreshing..."); 
+        // Icon for temerature 
         it.print(15, 350 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F050F");
+        // Horizontal line divider
         it.filled_rectangle(60, 365 - id(current_offset) - id(global_offset), 300, 3, COLOR_OFF);
+        // Icon for outside
         it.print(60, 380 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0405");
+        // Outside temperature sensor
         it.printf(100, 380 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(outside_temperature).state);
+        // Icon floor 1
         it.print(60, 420 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0D80");
+        // Upstairs average temperature sensor
         it.printf(100, 420 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(inside_temp_uppe).state);
+        // Icon ground floor
         it.print(60, 460 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0DD2");
+        // Downstairs average temperature sensor
         it.printf(100, 460 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(inside_temp_nere).state);
