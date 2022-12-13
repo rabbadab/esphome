@@ -1,0 +1,200 @@
+esphome:
+  name: esp-waveshare-7-1
+  on_boot:
+      priority: 200.0
+      then:
+        - component.update: eink_display
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption
+
+ota:
+  password: !secret ota_password
+
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp-Waveshare-7-1"
+    password: !secret ap_password
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    timezone: Europe/Stockholm
+    on_time:
+      # Every 5 minutes
+      - seconds: 0
+        minutes: /5
+        then:
+          - component.update: eink_display  
+sensor:
+  - platform: homeassistant
+    id: electricity_price
+    entity_id: !secret sensor_price
+    internal: true
+
+  - platform: homeassistant
+    id: outside_temperature
+    entity_id: sensor.nibe_73223_40004
+    internal: true
+  - platform: homeassistant
+    id: inside_temp_uppe
+    entity_id: sensor.snitt_temp_overvaning
+    internal: true
+  - platform: homeassistant
+    id: inside_temp_nere
+    entity_id: sensor.snitt_temp_nedervaning
+    internal: true
+    
+  - platform: homeassistant
+    id: alsike_to_work
+    entity_id: sensor.alsike_to_work
+    internal: true
+    on_value:
+      then:
+        - component.update: eink_display
+  - platform: homeassistant
+    id: par_eta_till_hem
+    entity_id: sensor.par_eta_till_hem
+    internal: true
+text_sensor:  
+  - platform: homeassistant
+    id: tibber_cost_word
+    entity_id: sensor.tibber_pris_i_ord
+    internal: true
+  - platform: homeassistant
+    id: lunch_brann
+    entity_id: sensor.lunch_idag_lustigkulla_forskola
+    internal: true
+  - platform: homeassistant
+    id: lunch_lustig
+    entity_id: sensor.lunch_idag_brannkarr_skola
+    internal: true
+  
+font:
+  - file: 'fonts/GothamRnd-Bold.ttf'
+    id: font_medium_bold
+    size: 30
+    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
+  - file: 'fonts/GothamRnd-Bold.ttf'
+    id: font_small_bold
+    size: 14
+    glyphs: ['&', '@', '!', ',', '.', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+        '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+        'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+        'T', 'U', 'V', 'W', 'X', 'Y', 'Z','Å','Ä','Ö', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+        'u', 'v', 'w', 'x', 'y', 'z','å', 'ä', 'ö', '/']
+  - file: 'fonts/materialdesignicons-webfont.ttf'
+    id: mdi_30
+    size: 30
+    glyphs: [
+      "\U000F11BE", # mdi-car-info
+      "\U000F140B", # mdi-lightning-bolt
+      "\U000F025A", # mdi-food
+      "\U000F050F", # mdi-thermometer
+      "\U000F0D80", # mdi-home-floor-1
+      "\U000F0DD2", # mdi-home-floor-0
+      "\U000F0405", # mdi-pine-tree
+      ]
+# Pins for Waveshare ePaper ESP Board
+spi:
+  clk_pin: GPIO13
+  mosi_pin: GPIO14
+
+globals:
+  - id: current_offset
+    restore_value: no
+    initial_value: "40"
+    type: int
+  - id: global_offset
+    restore_value: no
+    initial_value: "30"
+    type: int
+
+
+# Now render everything on the ePaper screen.
+display:
+  - platform: waveshare_epaper
+    id: eink_display
+    cs_pin: GPIO15
+    dc_pin: GPIO27
+    busy_pin: GPIO25
+    reset_pin: GPIO26
+    reset_duration: 2ms
+    model: 7.50in-bV2
+    update_interval: never
+    rotation: 270°
+    lambda: |-
+        // Create a black background sqare that fills the display
+        #define xres 480 
+        #define yres 800
+        it.filled_rectangle(0, 0, xres, yres, COLOR_ON);
+
+        // Power icon
+        it.print(15, 70 - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F140B");
+        // Horizontal line divider
+        it.filled_rectangle(60, 80 - id(global_offset), 300, 3, COLOR_OFF);
+        // Electricity price
+        it.printf(60, 100 - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT , "%.2f Kr", id(electricity_price).state);
+        // Price with words
+        it.printf(60, 130 - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(tibber_cost_word).state.c_str()); 
+
+        // Car icon info
+        it.print(15, 150 - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F11BE");
+        // Horizontal line divider
+        it.filled_rectangle(60, 165 - id(global_offset), 300, 3, COLOR_OFF);
+        // Sensor how long from home to work
+        it.printf(60, 180 - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.0fmin till SEB", id(alsike_to_work).state);
+        // function for checking if ETA is bigger than 1 then show ETA to home on display and also add 40 pixels to everything below this line. 
+        if (id(par_eta_till_hem).state >= 1) {
+        it.printf(60, 220 - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.0fmin hem", id(par_eta_till_hem).state);
+        id(current_offset) = 0;
+        } else {
+          id(current_offset) = 40;
+        }
+        Icon for food
+        it.print(15, 250 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F025A");
+        // Horizontal line divider
+        it.filled_rectangle(60, 265 - id(current_offset) - id(global_offset), 300, 3, COLOR_OFF);
+        it.print(15, 295 - id(current_offset) - id(global_offset), id(roboto11), COLOR_OFF, TextAlign::TOP_LEFT , "Maja");
+        it.printf(60, 290 - id(current_offset) - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(lunch_lustig).state.c_str());
+        it.print(15, 325 - id(current_offset) - id(global_offset), id(roboto11), COLOR_OFF, TextAlign::TOP_LEFT , "Agnes");
+        it.printf(60, 320 - id(current_offset) - id(global_offset), id(font_small_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%s", id(lunch_brann).state.c_str());
+
+        // Icon for temerature 
+        it.print(15, 350 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F050F");
+        // Horizontal line divider
+        it.filled_rectangle(60, 365 - id(current_offset) - id(global_offset), 300, 3, COLOR_OFF);
+        // Icon for outside
+        it.print(60, 380 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0405");
+        // Outside temperature sensor
+        it.printf(100, 380 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(outside_temperature).state);
+        // Icon floor 1
+        it.print(60, 420 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0D80");
+        // Upstairs average temperature sensor
+        it.printf(100, 420 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(inside_temp_uppe).state);
+        // Icon ground floor
+        it.print(60, 460 - id(current_offset) - id(global_offset), id(mdi_30), COLOR_OFF, TextAlign::TOP_LEFT , "\U000F0DD2");
+        // Downstairs average temperature sensor
+        it.printf(100, 460 - id(current_offset) - id(global_offset), id(font_medium_bold), COLOR_OFF, TextAlign::TOP_LEFT, "%.1f°C", id(inside_temp_nere).state);
