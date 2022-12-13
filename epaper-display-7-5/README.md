@@ -6,6 +6,11 @@ This project uses [ESPhome.io](https://esphome.io/) as a system to run on the ES
 Content for the display is fetched from [Home Assistant](https://www.home-assistant.io/).
 
 *This is a work in progress and for the content on the display it will change many times going forward.*
+### How do you use this?
+The yaml code is ment as a reference not a cut and replace.
+
+Look at the code file here:
+[epaper-display-7-5.yaml](/epaper-display-7-5.yaml)
 
 ### Functionality built into the software of the display:
 - Showing content depending on distance. When the car is away from home and have a longer ETA than 1 minute the display starts showing the ETA. 
@@ -22,6 +27,8 @@ Content for the display is fetched from [Home Assistant](https://www.home-assist
 - Waveshare 7.5inch e-paper display. I got the v3.   
 - IKEA picture frame is called RIBBA 13x18cm. The white border is a bit small and will hide a bit display area... 
 
+### More pictures will come with how the display is built. 
+In general it's put in as a picture and a cable to the esp32 that fit in the frame behind the display. 
 
 
 
